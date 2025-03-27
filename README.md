@@ -29,6 +29,8 @@ node index.js
 
 nodemon index.js
 
+Para rodar o Front recomendo instalar a extensão "live server" e executar no index.html 
+
 
 # Sugestões de melhorias
 
