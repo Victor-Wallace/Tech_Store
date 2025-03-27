@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e3f2fd;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Cadastrar Produto</h2>
+        <p>Preencha os dados abaixo:</p>
+        <form id="dadosForm">
+            <input type="text" placeholder="Nome" id="nome" required />
+            <input type="text" placeholder="Descrição" id="descricao" required />
+            <input type="number" placeholder="Preço" id="preco" required min="0.01" step="0.01" />
+            <input type="number" placeholder="Quantidade" id="quantidade" required min="1" />
+            <button type="submit">ENVIAR</button>
+        </form>
+        <button class="button" onclick="window.location.href='./index.html'">
+      VOLTAR
+    </button>
+    </div>
+
+    <script>
+        document.getElementById("dadosForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Impede o recarregamento da página
+
+            // Captura os valores dos inputs
+            const nome = document.getElementById("nome").value;
+            const desc = document.getElementById("descricao").value;
+            const preco = document.getElementById("preco").value;
+            const quant = document.getElementById("quantidade").value;
+
+            // Converte para JSON
+            const dados = {
+                nome,
+                desc,
+                quant,
+                preco,
+            };
+
+            try {
+                const resposta = await fetch("http://localhost:8000/produtos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                if (resposta.ok) {
+                    alert("Produto cadastrado com sucesso!");
+                    document.getElementById("dadosForm").reset(); // Limpa os campos
+                } else {
+                    console.log(`O erro é ${resposta.status} e ${resposta.text}`)
+                    alert("Erro ao cadastrar o produto.");
+                }
+            } catch (erro) {
+                console.error("Erro:", erro);
+                alert("Falha ao conectar ao servidor.");
+            }
+        });
+    </script>
+
+</body>
+</html>
